@@ -2,7 +2,6 @@ package com.dimas.tasklist.services;
 
 import com.dimas.tasklist.enums.Status;
 import com.dimas.tasklist.exceptions.tasks.TaskAlreadyExistException;
-import com.dimas.tasklist.exceptions.tasks.TaskIdDuplicateException;
 import com.dimas.tasklist.exceptions.tasks.TaskNotFoundException;
 import com.dimas.tasklist.exceptions.tasks.TaskPriorityException;
 import com.dimas.tasklist.exceptions.users.UserAlreadyExistException;
@@ -40,12 +39,9 @@ public class TaskListImpl implements TaskList {
         if (!Task.validatePriority(priority))
             throw new TaskPriorityException("field priority is not valid.");
 
-        if (taskAlreadyExistsForUser(taskId, userId))
-            throw new TaskIdDuplicateException("the task already exists for userId: " + userId);
-
         validateUserNotExistAndThrowException(userId);
 
-        Task newTask = new Task(taskId, description, priority);
+        Task newTask = new Task(taskId, description, priority, userId);
         newTask.setStatus(Status.PENDING);
         newTask.setCreatedAt(LocalDate.now());
 
@@ -80,9 +76,16 @@ public class TaskListImpl implements TaskList {
         if (!this.tasksMap.containsKey(taskId))
             throw new TaskNotFoundException("the task with id: " + taskId + " does not exist.");
 
+        Task task = this.tasksMap.get(taskId);
+        String userId = task.getUserId();
+
+        validateUserNotExistAndThrowException(userId);
+
+        User user = this.usersMap.get(userId);
+        user.removeTask(task);
+
         this.tasksMap.remove(taskId);
-        deleteTaskFromUserTaskList(taskId);
-        System.out.println("The task with id: " + taskId + " has been deleted successfully.");
+        System.out.println("The task with id: " + taskId + " has been deleted successfully." + this.tasksMap.size());
     }
 
     @Override
@@ -130,27 +133,6 @@ public class TaskListImpl implements TaskList {
 
         this.usersMap.put(userId, new User(userId, name));
         System.out.println("The user with id: " + userId + " has been added successfully.");
-    }
-
-    private boolean taskAlreadyExistsForUser(String taskId, String userId) {
-
-        if (!this.usersMap.containsKey(userId)) return false;
-
-        //TODO: No es neecsario ya que tasId es unico globalmente. Confiar en el taskMap
-        User user = this.usersMap.get(userId);
-        return user.getTasks()
-                .stream()
-                .anyMatch(task -> task.getId().equals(taskId));
-    }
-
-    private void deleteTaskFromUserTaskList(String taskId) {
-        this.usersMap.forEach((k, v) -> {
-            List<Task> newTaskList = v.getTasks()
-                    .stream()
-                    .filter(task -> !task.getId().equals(taskId))
-                    .collect(Collectors.toList());
-            v.setTasks(newTaskList);
-        });
     }
 
     private void validateUserNotExistAndThrowException(String userId) {

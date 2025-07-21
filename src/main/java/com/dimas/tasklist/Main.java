@@ -15,6 +15,7 @@ public class Main {
     public static void main(String[] args) {
 
         TaskList taskList = new TaskListImpl();
+
         int option = 0;
 
         do {
@@ -42,7 +43,11 @@ public class Main {
                         System.out.println("Ingresa el id del usuario");
                         String userId = sc2.next();
 
-                        taskList.addTask(taskId, description, priority, userId);
+                        try {
+                            taskList.addTask(taskId, description, priority, userId);
+                        } catch (Exception ex) {
+                            System.out.println(ex.getMessage());
+                        }
                         break;
 
                     case 2:
@@ -52,14 +57,22 @@ public class Main {
                         System.out.println("Ingresa el estado");
                         String status = sc2.next();
 
-                        taskList.updateTaskStatus(taskIdUpdated, status);
+                        try {
+                            taskList.updateTaskStatus(taskIdUpdated, status);
+                        } catch (Exception ex) {
+                            System.out.println(ex.getMessage());
+                        }
                         break;
 
                     case 3:
                         System.out.println("Ingresa el id de la tarea");
                         String taskIdRemoved = sc2.next();
 
-                        taskList.deleteTask(taskIdRemoved);
+                        try {
+                            taskList.deleteTask(taskIdRemoved);
+                        } catch (Exception ex) {
+                            System.out.println(ex.getMessage());
+                        }
                         break;
 
                     case 4:
@@ -73,14 +86,17 @@ public class Main {
                                 + '\n' + "[ priority_asc, priority_desc, create_date_asc, create_date_desc]");
                         String orderBy = sc2.next();
 
-                        List<Task> tasks = taskList.getTasksByUserId(taskIdUser, filterStatus, orderBy);
+                        try {
+                            List<Task> tasks = taskList.getTasksByUserId(taskIdUser, filterStatus, orderBy);
 
-                        if (tasks.isEmpty()) {
-                            System.out.println("Lista de tareas vacia.");
-                            break;
+                            if (tasks.isEmpty()) {
+                                System.out.println("Lista de tareas vacia.");
+                                break;
+                            }
+                            tasks.forEach(System.out::println);
+                        } catch (Exception ex) {
+                            System.out.println(ex.getMessage());
                         }
-
-                        tasks.forEach(System.out::println);
                         break;
 
                     case 5:
@@ -90,7 +106,11 @@ public class Main {
                         System.out.println("Ingrese el nombre del usuario");
                         String name = sc2.next();
 
-                        taskList.addUser(userIdAdded, name);
+                        try {
+                            taskList.addUser(userIdAdded, name);
+                        } catch (Exception ex) {
+                            System.out.println(ex.getMessage());
+                        }
                         break;
 
                     case 6:
@@ -101,7 +121,6 @@ public class Main {
                         System.out.println("Ingresa una opcion entre 1 y 6");
                         break;
                 }
-
             } catch (InputMismatchException ex) {
                 System.out.println("Error -> Ingresa unicamente numeros enteros positivos.");
             }

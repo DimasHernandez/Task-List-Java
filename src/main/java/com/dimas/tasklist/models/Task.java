@@ -95,7 +95,7 @@ public class Task {
                 "id:'" + id + '\'' +
                 ", description:'" + description + '\'' +
                 ", priority:" + priority +
-                ", status:" + status +
+                ", status:" + status.getNameStatus() +
                 ", userId:'" + userId + '\'' +
                 ", createdAt:" + createdAt + " " +
                 '}';

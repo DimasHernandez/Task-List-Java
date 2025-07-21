@@ -10,10 +10,7 @@ import com.dimas.tasklist.models.Task;
 import com.dimas.tasklist.models.User;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskListImpl implements TaskList {
@@ -37,7 +34,7 @@ public class TaskListImpl implements TaskList {
             throw new TaskAlreadyExistException(String.format("Task already exists: %s", taskId));
 
         if (!Task.validatePriority(priority))
-            throw new TaskPriorityException("field priority is not valid.");
+            throw new TaskPriorityException("field priority is not valid [1-5].");
 
         validateUserNotExistAndThrowException(userId);
 
@@ -85,39 +82,42 @@ public class TaskListImpl implements TaskList {
         user.removeTask(task);
 
         this.tasksMap.remove(taskId);
-        System.out.println("The task with id: " + taskId + " has been deleted successfully." + this.tasksMap.size());
+        System.out.println("The task with id: " + taskId + " has been deleted successfully.");
     }
 
     @Override
     public List<Task> getTasksByUserId(String userId, String filterStatus, String sortBy) {
 
         validateUserNotExistAndThrowException(userId);
-        Status status = Status.fromString(filterStatus);
         User user = this.usersMap.get(userId);
+
+        if (filterStatus != null && filterStatus.equals("todos")) {
+            return new ArrayList<>(user.getTasks());
+        }
 
         switch (sortBy) {
             case "priority_asc":
                 return user.getTasks().stream()
-                        .filter(task -> task.getStatus().equals(status))
+                        .filter(task -> filterStatusInTaskList(task, filterStatus))
                         .sorted(Comparator.comparing(Task::getPriority)
                                 .thenComparing(Task::getCreatedAt))
                         .collect(Collectors.toList());
 
             case "priority_desc":
                 return user.getTasks().stream()
-                        .filter(task -> task.getStatus().equals(status))
+                        .filter(task -> filterStatusInTaskList(task, filterStatus))
                         .sorted(Comparator.comparing(Task::getPriority).reversed())
                         .collect(Collectors.toList());
 
             case "create_date_asc":
                 return user.getTasks().stream()
-                        .filter(task -> task.getStatus().equals(status))
+                        .filter(task -> filterStatusInTaskList(task, filterStatus))
                         .sorted(Comparator.comparing(Task::getCreatedAt))
                         .collect(Collectors.toList());
 
             case "create_date_desc":
                 return user.getTasks().stream()
-                        .filter(task -> task.getStatus().equals(status))
+                        .filter(task -> filterStatusInTaskList(task, filterStatus))
                         .sorted(Comparator.comparing(Task::getCreatedAt).reversed())
                         .collect(Collectors.toList());
             default:
@@ -133,6 +133,11 @@ public class TaskListImpl implements TaskList {
 
         this.usersMap.put(userId, new User(userId, name));
         System.out.println("The user with id: " + userId + " has been added successfully.");
+    }
+
+    private boolean filterStatusInTaskList(Task task, String statusString) {
+        Status status = Status.fromString(statusString);
+        return task.getStatus().equals(status);
     }
 
     private void validateUserNotExistAndThrowException(String userId) {

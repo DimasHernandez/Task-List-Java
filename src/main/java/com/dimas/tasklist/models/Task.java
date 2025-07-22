@@ -28,6 +28,9 @@ public class Task {
         this.description = description;
         this.priority = priority;
         this.userId = userId;
+        // TODO Borrar esta linea
+        this.status = Status.PENDING;
+        this.createdAt = LocalDate.now();
     }
 
     public String getId() {

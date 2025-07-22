@@ -19,12 +19,12 @@ public class TaskListImpl implements TaskList {
 
     private final HashMap<String, Task> tasksMap;
 
-    public TaskListImpl() {
-        this.usersMap = new HashMap<>();
-        this.usersMap.put("1111", new User("1111", "Pepe"));
+    public TaskListImpl(HashMap<String, User> usersMap, HashMap<String, Task> taskMap) {
+        this.usersMap = usersMap;
+//        this.usersMap.put("1111", new User("1111", "Pepe"));
 //        this.usersMap.put("1212", new User("1212", "Juana"));
 
-        this.tasksMap = new HashMap<>();
+        this.tasksMap = taskMap;
     }
 
     @Override

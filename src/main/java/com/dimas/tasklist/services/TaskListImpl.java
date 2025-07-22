@@ -19,12 +19,10 @@ public class TaskListImpl implements TaskList {
 
     private final HashMap<String, Task> tasksMap;
 
-    public TaskListImpl(HashMap<String, User> usersMap, HashMap<String, Task> taskMap) {
-        this.usersMap = usersMap;
-//        this.usersMap.put("1111", new User("1111", "Pepe"));
-//        this.usersMap.put("1212", new User("1212", "Juana"));
-
-        this.tasksMap = taskMap;
+    public TaskListImpl() {
+        this.usersMap = new HashMap<>();
+        this.usersMap.put("1111", new User("1111", "Pepe")); // For test!
+        this.tasksMap = new HashMap<>();
     }
 
     @Override
@@ -135,6 +133,7 @@ public class TaskListImpl implements TaskList {
         System.out.println("The user with id: " + userId + " has been added successfully.");
     }
 
+    //TODO: Refactorizar este metodo!
     private boolean filterStatusInTaskList(Task task, String statusString) {
         Status status = Status.fromString(statusString);
         return task.getStatus().equals(status);

@@ -1,58 +1,19 @@
 package com.dimas.tasklist;
 
 import com.dimas.tasklist.models.Task;
-import com.dimas.tasklist.models.User;
 import com.dimas.tasklist.services.TaskList;
 import com.dimas.tasklist.services.TaskListImpl;
 
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
     public static void main(String[] args) {
-
-        Random random = new Random();
-
-        HashMap<String, User> userMap = new HashMap<>();
-        HashMap<String, Task> tasksMap = new HashMap<>();
-
-        Set<Task> taskSet = new HashSet<>();
-
-        int finalSize = 10000000;
-
-        for (int i = 0; i < finalSize; i++) {
-
-            tasksMap.put(String.valueOf(i + 1), new Task(String.valueOf(i + 1), "Jugar En la consola Play 5",
-                    random.nextInt(1, 6), String.valueOf((i + 1) + finalSize)));
-
-            Task task = tasksMap.get(String.valueOf(i + 1));
-            taskSet.add(task);
-
-            User user = new User();
-            user.setId(task.getUserId());
-            user.setName("Simon");
-            user.setTasks(taskSet);
-
-            userMap.put(user.getId(), user);
-        }
-
-        TaskList taskList = new TaskListImpl(userMap, tasksMap);
-
-//        System.out.println("Size list task: " + taskSet.size() + '\n' + "Size Task Map: " + tasksMap.size() + '\n' +
-//                "Size User Map: " + userMap.size());
-//
-//        List<Task> tasks = new ArrayList<>(taskSet);
-//        List<Task> orderTasksList = tasks.stream()
-//                .sorted(Comparator.comparing(Task::getId)).toList();
-//
-//        orderTasksList.forEach(System.out::println);
-//        System.out.println("\n **************** Task Map ****************");
-//        tasksMap.forEach((k, v) -> System.out.println(k + ": " + v));
-//
-//        System.out.println("\n **************** User Map ****************");
-//        userMap.forEach((k, v) -> System.out.println(k + ": name: " + v.getName() + " task " + v.getTasks()));
+        TaskList taskList = new TaskListImpl();
 
         int option = 0;
 
@@ -106,24 +67,8 @@ public class Main {
                         System.out.println("Ingresa el id de la tarea");
                         String taskIdRemoved = sc2.next();
 
-                        // TODO Borrar esto
-                        long startTimeMillisCase3 = (System.nanoTime() / 1000000);
-                        long startTimeSecondsCase3 = (System.nanoTime() / 1000000000);
-                        System.out.println("Tiempo de inicio en : " + startTimeMillisCase3 + " milisegundos");
-                        System.out.println("Tiempo de inicio en : " + startTimeSecondsCase3 + " segundos");
-
                         try {
                             taskList.deleteTask(taskIdRemoved);
-
-                            // TODO: Borrar esto
-                            long endTimeMillisCase3 = (System.nanoTime() / 1000000);
-                            long endTimeSecondsCase3 = (System.nanoTime() / 1000000000);
-                            System.out.println("Tiempo de finalización en: " + endTimeMillisCase3 + " milisegundos");
-                            System.out.println("Tiempo de finalización en: " + endTimeSecondsCase3 + " segundos");
-                            System.out.println("EL case 4. Eliminar tarea tardó: " + (endTimeMillisCase3 - startTimeMillisCase3) + " milisegundos");
-                            System.out.println("EL case 4. Eliminar tarea tardó: " + (endTimeSecondsCase3 - startTimeSecondsCase3) + " segundos");
-                            System.out.println("EL case 4. Eliminar tarea tardó: " + ((endTimeSecondsCase3 - startTimeSecondsCase3) / 60) + " minutos");
-
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
                         }
@@ -140,12 +85,6 @@ public class Main {
                                 + '\n' + "[ priority_asc, priority_desc, create_date_asc, create_date_desc]");
                         String orderBy = sc2.next();
 
-                        // TODO Borrar esto
-                        long startTimeMillis = (System.nanoTime() / 1000000);
-                        long startTimeSeconds = (System.nanoTime() / 1000000000);
-                        System.out.println("Tiempo de inicio en : " + startTimeMillis + " milisegundos");
-                        System.out.println("Tiempo de inicio en : " + startTimeSeconds + " segundos");
-
                         try {
                             List<Task> tasks = taskList.getTasksByUserId(taskIdUser, filterStatus, orderBy);
 
@@ -154,16 +93,6 @@ public class Main {
                                 break;
                             }
                             tasks.forEach(System.out::println);
-
-                            // TODO: Borrar esto
-                            long endTimeMillis = (System.nanoTime() / 1000000);
-                            long endTimeSeconds = (System.nanoTime() / 1000000000);
-                            System.out.println("Tiempo de finalización en: " + endTimeMillis + " milisegundos");
-                            System.out.println("Tiempo de finalización en: " + endTimeSeconds + " segundos");
-                            System.out.println("EL case 4. Listar tarea tardó: " + (endTimeMillis - startTimeMillis) + " milisegundos");
-                            System.out.println("EL case 4. Listar tarea tardó: " + (endTimeSeconds - startTimeSeconds) + " segundos");
-                            System.out.println("EL case 4. Listar tarea tardó: " + ((endTimeSeconds - startTimeSeconds) / 60) + " minutos");
-
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
                         }

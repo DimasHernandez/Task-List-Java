@@ -16,15 +16,21 @@ public class Task {
 
     private Status status;
 
+    private String userId;
+
     private LocalDate createdAt;
 
     public Task() {
     }
 
-    public Task(String id, String description, int priority) {
+    public Task(String id, String description, int priority, String userId) {
         this.id = id;
         this.description = description;
         this.priority = priority;
+        this.userId = userId;
+        // TODO Borrar esta linea
+        this.status = Status.PENDING;
+        this.createdAt = LocalDate.now();
     }
 
     public String getId() {
@@ -59,6 +65,14 @@ public class Task {
         this.status = status;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public LocalDate getCreatedAt() {
         return createdAt;
     }
@@ -80,12 +94,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return " {" +
+        return "{ " +
                 "id:'" + id + '\'' +
                 ", description:'" + description + '\'' +
                 ", priority:" + priority +
                 ", status:" + status.getNameStatus() +
-                ", createdAt:" + createdAt +
+                ", userId:'" + userId + '\'' +
+                ", createdAt:" + createdAt + " " +
                 '}';
     }
 

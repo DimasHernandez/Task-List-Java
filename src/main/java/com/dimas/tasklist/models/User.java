@@ -1,8 +1,8 @@
 package com.dimas.tasklist.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class User {
 
@@ -10,16 +10,16 @@ public class User {
 
     private String name;
 
-    private List<Task> tasks;
+    private Set<Task> tasks;
 
     public User() {
-        this.tasks = new ArrayList<>();
+        this.tasks = new HashSet<>();
     }
 
     public User(String id, String name) {
         this.id = id;
         this.name = name;
-        this.tasks = new ArrayList<>();
+        this.tasks = new HashSet<>();
     }
 
     public String getId() {
@@ -38,11 +38,11 @@ public class User {
         this.name = name;
     }
 
-    public List<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
@@ -59,5 +59,9 @@ public class User {
 
     public void addTask(Task task) {
         this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
     }
 }

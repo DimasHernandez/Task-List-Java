@@ -16,31 +16,29 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int numberOfUsers = 4000;
-        int minTaskPerUser = 3000;
-        int maxTaskPerUser = 5000;
+        int numberOfUsers = 1000;
+        int minTaskPerUser = 500;
+        int maxTaskPerUser = 1000;
 
         // Population data
         GenerateData generateData = new GenerateData(new UuidGenerateTaskId());
         try {
 
             // TODO: Borrar esto
-            long timeStartPopulationMilli = System.nanoTime() / 1000000;
-            long timeStartPopulationSeconds = System.nanoTime() / 1000000000;
-            System.out.println("timeStartPopulationMilli = " + timeStartPopulationMilli);
-            System.out.println("timeStartPopulationSeconds = " + timeStartPopulationSeconds);
+            long startTimeNanos = System.nanoTime();
+            System.out.println("startTimeNanos = " + startTimeNanos);
 
             generateData.populationData(numberOfUsers, minTaskPerUser, maxTaskPerUser);
 
-            long timeEndPopulationMilli = System.nanoTime() / 1000000;
-            long timeEndPopulationSeconds = System.nanoTime() / 1000000000;
-            System.out.println("Tiempo que demoro en cargar la data en milisegundos " + (timeEndPopulationMilli - timeStartPopulationMilli));
-            System.out.println("Tiempo que demoro en cargar la data en segundos " + (timeEndPopulationSeconds - timeStartPopulationSeconds));
+            long durationInMilli = ((System.nanoTime() - startTimeNanos) / 1000000);
+            long durationInSeconds = ((System.nanoTime() - startTimeNanos) / 1000000000);
+            System.out.println("Tiempo que demoro en cargar la data en milisegundos " + durationInMilli);
+            System.out.println("Tiempo que demoro en cargar la data en segundos " + durationInSeconds);
 
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-        TaskList taskList = new TaskListImpl(generateData.usersMap, generateData.taskMap);
+        TaskList taskList = new TaskListImpl(generateData.getUsersMap(), generateData.getTaskMap());
 
         int option = 0;
 
@@ -51,23 +49,29 @@ public class Main {
                     "4. Listar tarea" + '\n' + "5. Agregar un usuario" + '\n' + "6. Salir");
 
             Scanner sc = new Scanner(System.in);
-            Scanner sc2 = new Scanner(System.in);
+            /*
+             * sc.next() -> No acepta espacios
+             * sc.nextLine() -> Si acepta espacios
+             * */
             try {
                 option = sc.nextInt();
 
                 switch (option) {
                     case 1:
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
                         System.out.println("Ingresa el id de la tarea");
-                        String taskId = sc2.nextLine();
+                        String taskId = sc.nextLine();
 
                         System.out.println("Ingresa la descripcion de la tarea");
-                        String description = sc2.nextLine();
+                        String description = sc.nextLine();
 
                         System.out.println("Ingresa la prioridad de la tarea");
-                        int priority = sc2.nextInt();
+                        int priority = sc.nextInt();
+
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer.
 
                         System.out.println("Ingresa el id del usuario");
-                        String userId = sc2.next();
+                        String userId = sc.nextLine();
 
                         try {
                             taskList.addTask(taskId, description, priority, userId);
@@ -77,11 +81,13 @@ public class Main {
                         break;
 
                     case 2:
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
+
                         System.out.println("Ingresa el id de tarea");
-                        String taskIdUpdated = sc2.next();
+                        String taskIdUpdated = sc.nextLine();
 
                         System.out.println("Ingresa el estado");
-                        String status = sc2.next();
+                        String status = sc.nextLine();
 
                         try {
                             taskList.updateTaskStatus(taskIdUpdated, status);
@@ -91,47 +97,45 @@ public class Main {
                         break;
 
                     case 3:
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
+
                         System.out.println("Ingresa el id de la tarea");
-                        String taskIdRemoved = sc2.next();
+                        String taskIdRemoved = sc.nextLine();
 
                         // TODO Borrar esto
-                        long startTimeMillisCase3 = (System.nanoTime() / 1000000);
-                        long startTimeSecondsCase3 = (System.nanoTime() / 1000000000);
-                        System.out.println("Tiempo de inicio en : " + startTimeMillisCase3 + " milisegundos");
-                        System.out.println("Tiempo de inicio en : " + startTimeSecondsCase3 + " segundos");
+                        long startTimeNanoCase3 = System.nanoTime();
+                        System.out.println("startTimeNanoCase3 = " + startTimeNanoCase3);
 
                         try {
                             taskList.deleteTask(taskIdRemoved);
 
                             // TODO: Borrar esto
-                            long endTimeMillisCase3 = (System.nanoTime() / 1000000);
-                            long endTimeSecondsCase3 = (System.nanoTime() / 1000000000);
-                            System.out.println("Tiempo de finalización en: " + endTimeMillisCase3 + " milisegundos");
-                            System.out.println("Tiempo de finalización en: " + endTimeSecondsCase3 + " segundos");
-                            System.out.println("EL case 4. Eliminar tarea tardó: " + (endTimeMillisCase3 - startTimeMillisCase3) + " milisegundos");
-                            System.out.println("EL case 4. Eliminar tarea tardó: " + (endTimeSecondsCase3 - startTimeSecondsCase3) + " segundos");
-                            System.out.println("EL case 4. Eliminar tarea tardó: " + ((endTimeSecondsCase3 - startTimeSecondsCase3) / 60) + " minutos");
+                            long durationInMilliCase3 = ((System.nanoTime() - startTimeNanoCase3) / 1000000);
+                            long durationInSecondsCase3 = ((System.nanoTime() - startTimeNanoCase3) / 1000000000);
+                            System.out.println("durationInMilliCase3 = " + durationInMilliCase3);
+                            System.out.println("durationInSecondsCase3 = " + durationInSecondsCase3);
+
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
                         }
                         break;
 
                     case 4:
-                        System.out.println("Ingresa el id del usuario");
-                        String taskIdUser = sc2.next();
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
 
-                        System.out.println("Ingresa el estado para filtrar la tarea");
-                        String filterStatus = sc2.next();
+                        System.out.println("Ingresa el id del usuario");
+                        String taskIdUser = sc.nextLine();
+
+                        System.out.println("Ingresa el estado para filtrar la tarea" + '\n' + "[PENDIENTE, EN_PROGRESO, COMPLETADO, CANCELADO]");
+                        String filterStatus = sc.nextLine();
 
                         System.out.println("Ingresa el orden de la lista de tareas." + '\n' + "Ordenar por prioridad o fecha de creacion"
-                                + '\n' + "[ priority_asc, priority_desc, create_date_asc, create_date_desc]");
-                        String orderBy = sc2.next();
+                                + '\n' + "[priority_asc, priority_desc, create_date_asc, create_date_desc]");
+                        String orderBy = sc.nextLine();
 
                         // TODO Borrar esto
-                        long startTimeMillis = (System.nanoTime() / 1000000);
-                        long startTimeSeconds = (System.nanoTime() / 1000000000);
-                        System.out.println("Tiempo de inicio en : " + startTimeMillis + " milisegundos");
-                        System.out.println("Tiempo de inicio en : " + startTimeSeconds + " segundos");
+                        long startTimeNanoCase4 = System.nanoTime();
+                        System.out.println("startTimeNanoCase4 = " + startTimeNanoCase4);
 
                         try {
                             List<Task> tasks = taskList.getTasksByUserId(taskIdUser, filterStatus, orderBy);
@@ -144,13 +148,11 @@ public class Main {
                             System.out.println("Size list of tasks: " + tasks.size());
 
                             // TODO: Borrar esto
-                            long endTimeMillis = (System.nanoTime() / 1000000);
-                            long endTimeSeconds = (System.nanoTime() / 1000000000);
-                            System.out.println("Tiempo de finalización en: " + endTimeMillis + " milisegundos");
-                            System.out.println("Tiempo de finalización en: " + endTimeSeconds + " segundos");
-                            System.out.println("EL case 4. Listar tarea tardó: " + (endTimeMillis - startTimeMillis) + " milisegundos");
-                            System.out.println("EL case 4. Listar tarea tardó: " + (endTimeSeconds - startTimeSeconds) + " segundos");
-                            System.out.println("EL case 4. Listar tarea tardó: " + ((endTimeSeconds - startTimeSeconds) / 60) + " minutos");
+                            long durationInMilliCase4 = (System.nanoTime() - startTimeNanoCase4) / 1000000;
+                            long durationInSecondsCase4 = (System.nanoTime() - startTimeNanoCase4) / 1000000000;
+                            System.out.println("durationInMilliCase4 = " + durationInMilliCase4);
+                            System.out.println("durationInSecondsCase4 = " + durationInSecondsCase4);
+
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
                         }
@@ -158,10 +160,12 @@ public class Main {
 
                     case 5:
                         System.out.println("Ingresa el id del usuario");
-                        String userIdAdded = sc2.next();
+                        String userIdAdded = sc.nextLine();
+
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
 
                         System.out.println("Ingrese el nombre del usuario");
-                        String name = sc2.next();
+                        String name = sc.nextLine();
 
                         try {
                             taskList.addUser(userIdAdded, name);

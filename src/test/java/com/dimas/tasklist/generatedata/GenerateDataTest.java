@@ -42,11 +42,11 @@ class GenerateDataTest {
 
         // Act
         generateData.populationData(numberOfUsers, minTaskPerUser, maxTaskPerUser);
-        int sizeUserMap = generateData.usersMap.size();
+        int sizeUserMap = generateData.getUsersMap().size();
 
         // Assert
         assertEquals(3, sizeUserMap);
-        assertFalse(generateData.taskMap.isEmpty());
+        assertFalse(generateData.getTaskMap().isEmpty());
     }
 
     @ParameterizedTest
@@ -76,7 +76,7 @@ class GenerateDataTest {
         String message = "User with id " + user.getId() + " already exists.";
 
         // Act
-        generateData.usersMap.put(user.getId(), user);
+        generateData.getUsersMap().put(user.getId(), user);
 
         Exception exception = assertThrows(UserAlreadyExistException.class, () -> {
             generateData.populationData(numberOfUsers, minTaskPerUser, maxTaskPerUser);

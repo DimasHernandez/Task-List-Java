@@ -35,9 +35,9 @@ public class GenerateData {
 
     private final Status[] statuses = new Status[]{Status.PENDING, Status.IN_PROGRESS, Status.COMPLETED, Status.CANCELLED};
 
-    public final HashMap<String, User> usersMap = new HashMap<>();
+    private final HashMap<String, User> usersMap = new HashMap<>();
 
-    public final HashMap<String, Task> taskMap = new HashMap<>();
+    private final HashMap<String, Task> taskMap = new HashMap<>();
 
     private final IdGenerator idGenerator;
 
@@ -49,6 +49,24 @@ public class GenerateData {
     public GenerateData() {
         this(new UuidGenerateTaskId());
     }
+
+    public HashMap<String, User> getUsersMap() {
+        return usersMap;
+    }
+
+    public HashMap<String, Task> getTaskMap() {
+        return taskMap;
+    }
+
+    /**
+     * Pobla los mapas de usuarios y tareas con datos aleatorios.
+     * @param numUsers Número de usuarios a generar.
+     * @param minTaskPerUser Número mínimo de tareas por usuario.
+     * @param maxTaskPerUser Número máximo de tareas por usuario.
+     * @throws IllegalArgumentException Si minTaskPerUser >= maxTaskPerUser.
+     * @throws UserAlreadyExistException Si un userId ya existe.
+     * @throws TaskIdDuplicateException Si un taskId ya existe.
+     */
 
     public void populationData(int numUsers, int minTaskPerUser, int maxTaskPerUser) {
 

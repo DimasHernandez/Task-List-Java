@@ -22,6 +22,12 @@ public class User {
         this.tasks = new HashSet<>();
     }
 
+    public User(String id, String name, Set<Task> tasks) {
+        this.id = id;
+        this.name = name;
+        this.tasks = tasks;
+    }
+
     public String getId() {
         return id;
     }

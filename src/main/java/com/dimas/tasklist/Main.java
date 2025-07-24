@@ -1,5 +1,7 @@
 package com.dimas.tasklist;
 
+import com.dimas.tasklist.generatedata.GenerateData;
+import com.dimas.tasklist.generateid.UuidGenerateTaskId;
 import com.dimas.tasklist.models.Task;
 import com.dimas.tasklist.services.TaskList;
 import com.dimas.tasklist.services.TaskListImpl;
@@ -13,34 +15,63 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        TaskList taskList = new TaskListImpl();
+
+        int numberOfUsers = 1000;
+        int minTaskPerUser = 500;
+        int maxTaskPerUser = 1000;
+
+        // Population data
+        GenerateData generateData = new GenerateData(new UuidGenerateTaskId());
+        try {
+
+            // TODO: Borrar esto
+            long startTimeNanos = System.nanoTime();
+            System.out.println("startTimeNanos = " + startTimeNanos);
+
+            generateData.populationData(numberOfUsers, minTaskPerUser, maxTaskPerUser);
+
+            long durationInMilli = ((System.nanoTime() - startTimeNanos) / 1000000);
+            long durationInSeconds = ((System.nanoTime() - startTimeNanos) / 1000000000);
+            System.out.println("Tiempo que demoro en cargar la data en milisegundos " + durationInMilli);
+            System.out.println("Tiempo que demoro en cargar la data en segundos " + durationInSeconds);
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        TaskList taskList = new TaskListImpl(generateData.getUsersMap(), generateData.getTaskMap());
 
         int option = 0;
 
         do {
-            System.out.println("******************** Bienvenido al Sistema de Tareas ********************");
+            System.out.println("\n ******************** Bienvenido al Sistema de Tareas ********************");
             System.out.println("Por favor seleccione una opción, para continuar.");
             System.out.println("1. Agregar tarea" + '\n' + "2. Actualizar tarea" + '\n' + "3. Eliminar una tarea" + '\n' +
                     "4. Listar tarea" + '\n' + "5. Agregar un usuario" + '\n' + "6. Salir");
 
             Scanner sc = new Scanner(System.in);
-            Scanner sc2 = new Scanner(System.in);
+            /*
+             * sc.next() -> No acepta espacios
+             * sc.nextLine() -> Si acepta espacios
+             * */
             try {
                 option = sc.nextInt();
 
                 switch (option) {
                     case 1:
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
                         System.out.println("Ingresa el id de la tarea");
-                        String taskId = sc2.nextLine();
+                        String taskId = sc.nextLine();
 
                         System.out.println("Ingresa la descripcion de la tarea");
-                        String description = sc2.nextLine();
+                        String description = sc.nextLine();
 
                         System.out.println("Ingresa la prioridad de la tarea");
-                        int priority = sc2.nextInt();
+                        int priority = sc.nextInt();
+
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer.
 
                         System.out.println("Ingresa el id del usuario");
-                        String userId = sc2.next();
+                        String userId = sc.nextLine();
 
                         try {
                             taskList.addTask(taskId, description, priority, userId);
@@ -50,11 +81,13 @@ public class Main {
                         break;
 
                     case 2:
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
+
                         System.out.println("Ingresa el id de tarea");
-                        String taskIdUpdated = sc2.next();
+                        String taskIdUpdated = sc.nextLine();
 
                         System.out.println("Ingresa el estado");
-                        String status = sc2.next();
+                        String status = sc.nextLine();
 
                         try {
                             taskList.updateTaskStatus(taskIdUpdated, status);
@@ -64,26 +97,45 @@ public class Main {
                         break;
 
                     case 3:
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
+
                         System.out.println("Ingresa el id de la tarea");
-                        String taskIdRemoved = sc2.next();
+                        String taskIdRemoved = sc.nextLine();
+
+                        // TODO Borrar esto
+                        long startTimeNanoCase3 = System.nanoTime();
+                        System.out.println("startTimeNanoCase3 = " + startTimeNanoCase3);
 
                         try {
                             taskList.deleteTask(taskIdRemoved);
+
+                            // TODO: Borrar esto
+                            long durationInMilliCase3 = ((System.nanoTime() - startTimeNanoCase3) / 1000000);
+                            long durationInSecondsCase3 = ((System.nanoTime() - startTimeNanoCase3) / 1000000000);
+                            System.out.println("durationInMilliCase3 = " + durationInMilliCase3);
+                            System.out.println("durationInSecondsCase3 = " + durationInSecondsCase3);
+
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
                         }
                         break;
 
                     case 4:
-                        System.out.println("Ingresa el id del usuario");
-                        String taskIdUser = sc2.next();
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
 
-                        System.out.println("Ingresa el estado para filtrar la tarea");
-                        String filterStatus = sc2.next();
+                        System.out.println("Ingresa el id del usuario");
+                        String taskIdUser = sc.nextLine();
+
+                        System.out.println("Ingresa el estado para filtrar la tarea" + '\n' + "[PENDIENTE, EN_PROGRESO, COMPLETADO, CANCELADO]");
+                        String filterStatus = sc.nextLine();
 
                         System.out.println("Ingresa el orden de la lista de tareas." + '\n' + "Ordenar por prioridad o fecha de creacion"
-                                + '\n' + "[ priority_asc, priority_desc, create_date_asc, create_date_desc]");
-                        String orderBy = sc2.next();
+                                + '\n' + "[priority_asc, priority_desc, create_date_asc, create_date_desc]");
+                        String orderBy = sc.nextLine();
+
+                        // TODO Borrar esto
+                        long startTimeNanoCase4 = System.nanoTime();
+                        System.out.println("startTimeNanoCase4 = " + startTimeNanoCase4);
 
                         try {
                             List<Task> tasks = taskList.getTasksByUserId(taskIdUser, filterStatus, orderBy);
@@ -93,6 +145,14 @@ public class Main {
                                 break;
                             }
                             tasks.forEach(System.out::println);
+                            System.out.println("Size list of tasks: " + tasks.size());
+
+                            // TODO: Borrar esto
+                            long durationInMilliCase4 = (System.nanoTime() - startTimeNanoCase4) / 1000000;
+                            long durationInSecondsCase4 = (System.nanoTime() - startTimeNanoCase4) / 1000000000;
+                            System.out.println("durationInMilliCase4 = " + durationInMilliCase4);
+                            System.out.println("durationInSecondsCase4 = " + durationInSecondsCase4);
+
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
                         }
@@ -100,10 +160,12 @@ public class Main {
 
                     case 5:
                         System.out.println("Ingresa el id del usuario");
-                        String userIdAdded = sc2.next();
+                        String userIdAdded = sc.nextLine();
+
+                        sc.nextLine(); // Consumir el salto de linea que quedo en el buffer
 
                         System.out.println("Ingrese el nombre del usuario");
-                        String name = sc2.next();
+                        String name = sc.nextLine();
 
                         try {
                             taskList.addUser(userIdAdded, name);

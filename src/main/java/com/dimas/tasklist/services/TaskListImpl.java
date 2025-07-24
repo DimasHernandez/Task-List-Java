@@ -25,6 +25,11 @@ public class TaskListImpl implements TaskList {
         this.tasksMap = new HashMap<>();
     }
 
+    public TaskListImpl(HashMap<String, User> usersMap, HashMap<String, Task> tasksMap) {
+        this.usersMap = usersMap;
+        this.tasksMap = tasksMap;
+    }
+
     @Override
     public void addTask(String taskId, String description, int priority, String userId) {
 

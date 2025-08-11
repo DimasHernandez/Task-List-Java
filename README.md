@@ -1,7 +1,7 @@
 # Aplicación Lista de Tareas
 ## Introducción
 
-La **Aplicación de Lista de Tareas** es un proyecto basado en Java diseñado para gestionar tareas y usuarios, proporcionando funcionalidades básicas como crear, actualizar, eliminar y listar tareas asociadas a los usuarios. La aplicación sigue una **arquitectura en capas** con capas diferenciadas para la lógica de servicio, el acceso a datos (repositorio) y 
+La **Aplicación de Lista de Tareas** es un proyecto basado en Java, diseñado para gestionar tareas y usuarios, proporcionando funcionalidades básicas como crear, actualizar, eliminar y listar tareas asociadas a los usuarios. La aplicación sigue una **arquitectura en capas** con capas diferenciadas para la lógica de servicio, el acceso a datos (repositorio) y 
 la generación de datos, lo que garantiza un diseño modular y fácil de mantener. El objetivo principal es demostrar un diseño de software robusto, la inyección de dependencias y las pruebas unitarias en un sistema sencillo pero extensible.
 
 **Alcance**: Esta implementación se centra en la gestión de datos en memoria utilizando estructuras `HashMap` para almacenar usuarios y tareas, sin conexión a una base de datos. Las características clave incluyen la creación de tareas con prioridades y estados, la asociación de usuarios y tareas, y las capacidades de filtrado y clasificación de tareas. 
@@ -58,7 +58,7 @@ El siguiente diagrama ilustra las clases principales y sus relaciones en la apli
 
 ## Pruebas
 - Las pruebas unitarias se implementan utilizando JUnit y Mockito.
-- Ejecutar pruebas: `gradlew test`
+- Ejecutar pruebas: `mvn test` o `./mvnw test`
 - Las pruebas clave incluyen:
   - Validación de la generación de datos (`GenerateDataTest`).
   - Comprobación de ID de tareas/usuarios duplicados (`TaskIdDuplicateException`, `UserAlreadyExistException`).

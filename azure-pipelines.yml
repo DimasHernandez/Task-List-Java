@@ -23,7 +23,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     Contents: '**/.jar'
-    TargetFolder: '$(build.artifactstagingdirectory)'
+    TargetFolder: '$(Build.Repository.LocalPath)'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'

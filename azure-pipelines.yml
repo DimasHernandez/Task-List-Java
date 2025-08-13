@@ -22,8 +22,9 @@ steps:
     goals: 'package'
 - task: CopyFiles@2
   inputs:
+    SourceFolder: '${System.DefaultWorkingDirectory}/target'
     Contents: '**/.jar'
-    TargetFolder: '$(Build.Repository.LocalPath)'
+    TargetFolder: '$(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
